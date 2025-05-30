@@ -1,6 +1,6 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
-import { GoogleOAuthProvider } from '@react-oauth/google'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import EduLink from './components/homepage'
 import About from './components/about'
 import Header from './components/header'
@@ -11,44 +11,62 @@ import Footer from './components/footer'
 import StudentPosts from './components/studentPosts'
 import StudentAuth from './components/auth/StudentAuth'
 import TeacherAuth from './components/auth/TeacherAuth'
-import TeacherDashboard from './components/TeacherDashboard'
+import TeacherDashboard from './components/dashboard/TeacherDashboard'
 import './App.css'
 
-// Wrapper component to handle layout
-const LayoutWrapper = ({ children }) => {
-  const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/dashboard');
+// Protected Route component
+const ProtectedRoute = ({ children, userType }) => {
+  const { user } = useAuth();
+  
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
+  if (userType && user.userType !== userType) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+};
+
+const AppContent = () => {
   return (
-    <div className={`App ${isDashboard ? 'dashboard-layout' : ''}`}>
+    <div className="d-flex flex-column min-vh-100">
       <Header />
-      <main className={isDashboard ? 'dashboard-main' : ''}>{children}</main>
+      <main className="flex-grow-1">
+        <Routes>
+          <Route path="/" element={<EduLink />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/find-teachers" element={<FindTeachers />} />
+          <Route path="/student-posts" element={<StudentPosts />} />
+          <Route path="/login/student" element={<StudentAuth isLogin={true} />} />
+          <Route path="/login/teacher" element={<TeacherAuth isLogin={true} />} />
+          <Route path="/register/student" element={<StudentAuth isLogin={false} />} />
+          <Route path="/register/teacher" element={<TeacherAuth isLogin={false} />} />
+          <Route
+            path="/dashboard/teacher"
+            element={
+              <ProtectedRoute userType="teacher">
+                <TeacherDashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </main>
       <Footer />
     </div>
   );
 };
 
-function App() {
+const App = () => {
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-      <Router>
-        <LayoutWrapper>
-          <Routes>
-            <Route path="/" element={<EduLink />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/find-teachers" element={<FindTeachers />} />
-            <Route path="/student-posts" element={<StudentPosts />} />
-            <Route path="/login/student" element={<StudentAuth isLogin={true} />} />
-            <Route path="/login/teacher" element={<TeacherAuth isLogin={true} />} />
-            <Route path="/register/student" element={<StudentAuth isLogin={false} />} />
-            <Route path="/register/teacher" element={<TeacherAuth isLogin={false} />} />
-            <Route path="/dashboard/teacher" element={<TeacherDashboard />} />
-          </Routes>
-        </LayoutWrapper>
-      </Router>
-    </GoogleOAuthProvider>
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
   )
 }
 

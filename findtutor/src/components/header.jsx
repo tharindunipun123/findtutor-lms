@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Header.css';
@@ -7,11 +8,12 @@ import './Header.css';
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showLoginDropdown, setShowLoginDropdown] = useState(false);
+  const [showRegisterDropdown, setShowRegisterDropdown] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState('student');
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,15 +24,27 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.dropdown')) {
+        setShowLoginDropdown(false);
+        setShowRegisterDropdown(false);
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   const isActive = (path) => {
     return location.pathname === path ? 'active' : '';
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUserType('');
+    logout();
     setShowDropdown(false);
-    navigate('/');
   };
 
   return (
@@ -95,18 +109,22 @@ const Header = () => {
 
             {/* Auth Buttons */}
             <div className="auth-buttons d-flex align-items-center gap-3">
-              {isLoggedIn ? (
-                <div className="position-relative">
+              {user ? (
+                <div className="dropdown position-relative">
                   <button
                     className="btn btn-link text-dark text-decoration-none"
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
                     <i className="bi bi-person-circle me-1"></i>
-                    Profile
+                    {user.name || 'Profile'}
                   </button>
                   {showDropdown && (
                     <div className="dropdown-menu show position-absolute end-0 mt-2">
-                      <Link className="dropdown-item" to={`/${userType}-profile`}>
+                      <Link className="dropdown-item" to={`/dashboard/${user.userType}`}>
+                        <i className="bi bi-speedometer2 me-2"></i>
+                        Dashboard
+                      </Link>
+                      <Link className="dropdown-item" to={`/${user.userType}-profile`}>
                         <i className="bi bi-person me-2"></i>
                         Profile
                       </Link>
@@ -123,12 +141,62 @@ const Header = () => {
                 </div>
               ) : (
                 <div className="d-flex gap-2">
-                  <Link to="/login/student" className="btn btn-primary">
-                    Login
-                  </Link>
-                  <Link to="/register/student" className="btn btn-outline-primary">
-                    Register
-                  </Link>
+                  <div className="dropdown position-relative">
+                    <button 
+                      className="btn btn-primary"
+                      onClick={() => setShowLoginDropdown(!showLoginDropdown)}
+                    >
+                      Login
+                    </button>
+                    {showLoginDropdown && (
+                      <div className="dropdown-menu show position-absolute end-0 mt-2">
+                        <Link 
+                          className="dropdown-item" 
+                          to="/login/student"
+                          onClick={() => setShowLoginDropdown(false)}
+                        >
+                          <i className="bi bi-person me-2"></i>
+                          Student Login
+                        </Link>
+                        <Link 
+                          className="dropdown-item" 
+                          to="/login/teacher"
+                          onClick={() => setShowLoginDropdown(false)}
+                        >
+                          <i className="bi bi-person-workspace me-2"></i>
+                          Teacher Login
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                  <div className="dropdown position-relative">
+                    <button 
+                      className="btn btn-outline-primary"
+                      onClick={() => setShowRegisterDropdown(!showRegisterDropdown)}
+                    >
+                      Register
+                    </button>
+                    {showRegisterDropdown && (
+                      <div className="dropdown-menu show position-absolute end-0 mt-2">
+                        <Link 
+                          className="dropdown-item" 
+                          to="/register/student"
+                          onClick={() => setShowRegisterDropdown(false)}
+                        >
+                          <i className="bi bi-person me-2"></i>
+                          Student Register
+                        </Link>
+                        <Link 
+                          className="dropdown-item" 
+                          to="/register/teacher"
+                          onClick={() => setShowRegisterDropdown(false)}
+                        >
+                          <i className="bi bi-person-workspace me-2"></i>
+                          Teacher Register
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

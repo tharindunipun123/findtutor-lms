@@ -60,7 +60,7 @@ const About = () => {
         <div className="container py-5">
           <div className="row min-vh-50 align-items-center">
             <div className="col-lg-6">
-              <h1 className="display-4 fw-bold mb-4">About EduLink</h1>
+              <h1 className="display-4 fw-bold mb-4">About FindTutor</h1>
               <p className="lead mb-4">
                 We're on a mission to transform education by connecting passionate teachers with motivated students worldwide.
               </p>
@@ -68,18 +68,20 @@ const About = () => {
                 <Link to="/find-teachers" className="btn btn-primary btn-lg">
                   Find a Teacher
                 </Link>
-                
               </div>
             </div>
             <div className="col-lg-6 d-none d-lg-block">
-              <div className="position-relative">
-                <div className="position-absolute top-0 start-0 end-0 bottom-0 bg-primary opacity-10 rounded-3"></div>
-                <img 
-                  src="https://www.eschoolnews.com/files/2021/06/student-collaboration.jpeg" 
-                  alt="Education illustration" 
-                  className="img-fluid rounded-3 shadow-lg"
-                />
-              </div>
+              <img 
+                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                alt="Students collaborating" 
+                className="img-fluid rounded-3 shadow-lg"
+                style={{ 
+                  width: '100%',
+                  height: '400px',
+                  objectFit: 'cover',
+                  objectPosition: 'center'
+                }}
+              />
             </div>
           </div>
         </div>
@@ -156,13 +158,13 @@ const About = () => {
               <h2 className="section-title">Our Story</h2>
               <div className="company-story-content">
                 <p className="story-paragraph">
-                  EduLink was born from a simple yet powerful vision: to bridge the gap between passionate educators and eager learners worldwide. 
+                  FindTutor was born from a simple yet powerful vision: to bridge the gap between passionate educators and eager learners worldwide. 
                   We believe that education should be accessible, personalized, and transformative for everyone.
                 </p>
                 <p className="story-paragraph">
                   Our platform connects thousands of qualified teachers with students seeking knowledge, creating meaningful learning experiences 
                   that transcend geographical boundaries. Whether you're a student looking to expand your horizons or a teacher wanting to share 
-                  your expertise, EduLink provides the perfect environment for educational growth.
+                  your expertise, FindTutor provides the perfect environment for educational growth.
                 </p>
                 <div className="company-stats">
                   <div className="stat-item">
@@ -188,8 +190,6 @@ const About = () => {
         </div>
       </div>
 
-     
-
       {/* CTA Section */}
       <section className="py-5 bg-primary text-white">
         <div className="container py-5">
@@ -198,7 +198,7 @@ const About = () => {
               <h2 className="display-5 fw-bold mb-4">Join Our Educational Revolution</h2>
               <p className="lead mb-5">
                 Whether you're a teacher looking to share your knowledge or a student seeking to learn,
-                EduLink is the perfect platform for you.
+                FindTutor is your gateway to a world of educational opportunities.
               </p>
               <div className="d-flex gap-3 justify-content-center">
                 <Link to="/register/teacher" className="btn btn-light btn-lg">
@@ -213,6 +213,7 @@ const About = () => {
         </div>
       </section>
 
+      <Footer />
 
       <style jsx>{`
         .about-hero {
