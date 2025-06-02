@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Finder API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fafafa;
+            color: #3b4151;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            margin: -20px -20px 30px -20px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .info-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .section-header:hover {
+            background: #e9ecef;
+        }
+
+        .section-header h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .section-description {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        .endpoints {
+            padding: 0;
+        }
+
+        .endpoint {
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .endpoint:last-child {
+            border-bottom: none;
+        }
+
+        .endpoint-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .endpoint-header:hover {
+            background: #f8f9fa;
+        }
+
+        .method {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .method.get { background: #61affe; color: white; }
+        .method.post { background: #49cc90; color: white; }
+        .method.put { background: #fca130; color: white; }
+        .method.patch { background: #50e3c2; color: white; }
+        .method.delete { background: #f93e3e; color: white; }
+
+        .endpoint-path {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .endpoint-summary {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .endpoint-details {
+            padding: 20px;
+            background: #fafbfc;
+            border-top: 1px solid #e9ecef;
+            display: none;
+        }
+
+        .endpoint-details.active {
+            display: block;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .parameters-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .parameters-table th,
+        .parameters-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .parameters-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .param-required {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .param-optional {
+            color: #6c757d;
+        }
+
+        .response-codes {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .response-code {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+
+        .response-code.success { border-color: #28a745; }
+        .response-code.error { border-color: #dc3545; }
+        .response-code.redirect { border-color: #ffc107; }
+
+        .status-code {
+            font-weight: bold;
+            font-family: 'Monaco', 'Courier New', monospace;
+            min-width: 40px;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s;
+            margin-left: auto;
+        }
+
+        .toggle-icon.active {
+            transform: rotate(180deg);
+        }
+
+        .collapsible.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .json {
+            color: #e06c75;
+        }
+        .json .key {
+            color: #61dafb;
+        }
+        .json .string {
+            color: #98c379;
+        }
+        .json .number {
+            color: #d19a66;
+        }
+        .json .boolean {
+            color: #c678dd;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                margin: -10px -10px 20px -10px;
+                padding: 30px 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tutor Finder API</h1>
+            <p>Complete API documentation for the Tutor Finder platform</p>
+        </div>
+
+        <div class="info-box">
+            <h3>API Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Base URL:</strong><br>
+                    <code>http://localhost:5000</code>
+                </div>
+                <div class="info-item">
+                    <strong>Database:</strong><br>
+                    MySQL (tutor_finder)
+                </div>
+                <div class="info-item">
+                    <strong>Authentication:</strong><br>
+                    None (Open endpoints)
+                </div>
+                <div class="info-item">
+                    <strong>Content Type:</strong><br>
+                    application/json
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Check -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Health Check</h2>
+                <p class="section-description">Server status and health monitoring</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/health</span>
+                        <span class="endpoint-summary">Check server status</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Check if the server is running and responding to requests.</p>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Response</div>
+                            <div class="code-block">{
+  "status": "ok",
+  "message": "Server is running"
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Response Codes</div>
+                            <div class="response-codes">
+                                <div class="response-code success">
+                                    <span class="status-code">200</span>
+                                    <span>OK - Server is healthy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users API -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Users API</h2>
+                <p class="section-description">User registration, authentication, and profile management</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/users</span>
+                        <span class="endpoint-summary">Get all users</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Retrieve all users (excluding passwords) with basic profile information.</p>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">[
+  {
+    "id": 1,
+    "email": "user@example.com",
+    "name": "John Doe",
+    "role": "student",
+    "profile_picture": "https://example.com/profile.jpg",
+    "created_at": "2025-01-01T00:00:00.000Z"
+  }
+]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/users/{id}</span>
+                        <span class="endpoint-summary">Get user by ID</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Parameters</div>
+                            <table class="parameters-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>id</td>
+                                        <td>integer</td>
+                                        <td class="param-required">Required</td>
+                                        <td>User ID</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Response Codes</div>
+                            <div class="response-codes">
+                                <div class="response-code success">
+                                    <span class="status-code">200</span>
+                                    <span>OK - User found</span>
+                                </div>
+                                <div class="response-code error">
+                                    <span class="status-code">404</span>
+                                    <span>Not Found - User not found</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/users</span>
+                        <span class="endpoint-summary">Create new user (Registration)</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "email": "user@example.com",
+  "password": "password123",
+  "name": "John Doe",
+  "role": "student"
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Parameters</div>
+                            <table class="parameters-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>email</td>
+                                        <td>string</td>
+                                        <td class="param-required">Required</td>
+                                        <td>User email address</td>
+                                    </tr>
+                                    <tr>
+                                        <td>password</td>
+                                        <td>string</td>
+                                        <td class="param-required">Required</td>
+                                        <td>User password</td>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>string</td>
+                                        <td class="param-required">Required</td>
+                                        <td>User full name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>role</td>
+                                        <td>string</td>
+                                        <td class="param-required">Required</td>
+                                        <td>User role: "student" or "teacher"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method put">PUT</span>
+                        <span class="endpoint-path">/api/users/{id}</span>
+                        <span class="endpoint-summary">Update user profile</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "name": "Updated Name",
+  "profile_picture": "https://example.com/new-profile.jpg"
+}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/users/{id}</span>
+                        <span class="endpoint-summary">Delete user</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Delete user and all related data (cascading delete).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/users/login</span>
+                        <span class="endpoint-summary">User login</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "email": "user@example.com",
+  "password": "password123"
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">{
+  "id": 1,
+  "email": "user@example.com",
+  "name": "John Doe",
+  "role": "student"
+}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teachers API -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Teachers API</h2>
+                <p class="section-description">Teacher profile management, subjects, and search functionality</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/teachers</span>
+                        <span class="endpoint-summary">Get all teachers</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">[
+  {
+    "user_id": 1,
+    "name": "Teacher Name",
+    "profile_picture": "https://example.com/profile.jpg",
+    "teacher_id": 1,
+    "bio": "Experienced mathematics teacher",
+    "years_experience": 5,
+    "education": "PhD in Mathematics",
+    "hourly_rate": 50.00,
+    "location": "New York",
+    "lat": 40.7128,
+    "lng": -74.0060,
+    "is_subscribed": true
+  }
+]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/teachers/{id}</span>
+                        <span class="endpoint-summary">Get teacher by ID with subjects and classes</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get detailed teacher information including their subjects and class listings.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method put">PUT</span>
+                        <span class="endpoint-path">/api/teachers/{id}</span>
+                        <span class="endpoint-summary">Update teacher profile</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "bio": "Updated bio",
+  "years_experience": 6,
+  "education": "PhD in Mathematics",
+  "hourly_rate": 55.00,
+  "availability": "Mon-Fri 9AM-5PM",
+  "location": "New York",
+  "lat": 40.7128,
+  "lng": -74.0060
+}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/teachers/{id}/subjects</span>
+                        <span class="endpoint-summary">Add subject to teacher</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "subject_id": 1
+}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/teachers/{id}/subjects/{subjectId}</span>
+                        <span class="endpoint-summary">Remove subject from teacher</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Remove subject association from teacher profile.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/teachers/search</span>
+                        <span class="endpoint-summary">Search teachers</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Query Parameters</div>
+                            <table class="parameters-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>subject</td>
+                                        <td>string</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Subject name to filter by</td>
+                                    </tr>
+                                    <tr>
+                                        <td>location</td>
+                                        <td>string</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Location to filter by</td>
+                                    </tr>
+                                    <tr>
+                                        <td>max_price</td>
+                                        <td>number</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Maximum hourly rate</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students API -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Students API</h2>
+                <p class="section-description">Student profile management and request tracking</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/students</span>
+                        <span class="endpoint-summary">Get all students</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">[
+  {
+    "user_id": 1,
+    "name": "Student Name",
+    "profile_picture": "https://example.com/profile.jpg",
+    "student_id": 1,
+    "bio": "High school student",
+    "education_level": "High School",
+    "location": "New York"
+  }
+]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/students/{id}</span>
+                        <span class="endpoint-summary">Get student by ID</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get specific student details including email information.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method put">PUT</span>
+                        <span class="endpoint-path">/api/students/{id}</span>
+                        <span class="endpoint-summary">Update student profile</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "bio": "Updated bio",
+  "education_level": "College",
+  "location": "Boston"
+}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/students/{id}/requests</span>
+                        <span class="endpoint-summary">Get student's requests</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get all tutoring requests made by a specific student.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Classes API -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Classes API</h2>
+                <p class="section-description">Class listings, creation, and search functionality</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/classes</span>
+                        <span class="endpoint-summary">Get all classes</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">[
+  {
+    "id": 1,
+    "title": "Advanced Mathematics",
+    "description": "Calculus and advanced topics",
+    "price": 75.00,
+    "location": "New York",
+    "lat": 40.7128,
+    "lng": -74.0060,
+    "is_online": false,
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "updated_at": "2025-01-01T00:00:00.000Z",
+    "subject_id": 1,
+    "subject_name": "Mathematics",
+    "teacher_id": 1,
+    "user_id": 1,
+    "teacher_name": "Teacher Name",
+    "teacher_profile_picture": "https://example.com/profile.jpg"
+  }
+]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/classes/{id}</span>
+                        <span class="endpoint-summary">Get class by ID</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get detailed class information including teacher profile details.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/classes</span>
+                        <span class="endpoint-summary">Create new class</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "teacher_id": 1,
+  "title": "Advanced Mathematics",
+  "subject_id": 1,
+  "description": "Calculus and advanced topics",
+  "price": 75.00,
+  "location": "New York",
+  "lat": 40.7128,
+  "lng": -74.0060,
+  "is_online": false
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Required Fields</div>
+                            <p><strong>teacher_id, title, subject_id, price</strong> are required fields.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method put">PUT</span>
+                        <span class="endpoint-path">/api/classes/{id}</span>
+                        <span class="endpoint-summary">Update class</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Update class information. All fields are optional.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/classes/{id}</span>
+                        <span class="endpoint-summary">Delete class</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Delete a class listing permanently.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/classes/search</span>
+                        <span class="endpoint-summary">Search classes</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Query Parameters</div>
+                            <table class="parameters-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>subject</td>
+                                        <td>string</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Subject name or class title</td>
+                                    </tr>
+                                    <tr>
+                                        <td>location</td>
+                                        <td>string</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Location to filter by</td>
+                                    </tr>
+                                    <tr>
+                                        <td>min_price</td>
+                                        <td>number</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Minimum price</td>
+                                    </tr>
+                                    <tr>
+                                        <td>max_price</td>
+                                        <td>number</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Maximum price</td>
+                                    </tr>
+                                    <tr>
+                                        <td>online_only</td>
+                                        <td>boolean</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Filter for online classes only</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subjects API -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Subjects API</h2>
+                <p class="section-description">Subject management and associations</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/subjects</span>
+                        <span class="endpoint-summary">Get all subjects</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">[
+  {
+    "id": 1,
+    "name": "Mathematics"
+  },
+  {
+    "id": 2,
+    "name": "Physics"
+  }
+]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/subjects/{id}</span>
+                        <span class="endpoint-summary">Get subject by ID</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get specific subject details by ID.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/subjects</span>
+                        <span class="endpoint-summary">Create new subject</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "name": "New Subject"
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Validation</div>
+                            <p>Subject name must be unique and required.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method put">PUT</span>
+                        <span class="endpoint-path">/api/subjects/{id}</span>
+                        <span class="endpoint-summary">Update subject</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "name": "Updated Subject Name"
+}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/subjects/{id}</span>
+                        <span class="endpoint-summary">Delete subject</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Delete a subject. Cannot delete if subject is in use by classes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/subjects/{id}/teachers</span>
+                        <span class="endpoint-summary">Get teachers by subject</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get all teachers who teach a specific subject.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/subjects/{id}/classes</span>
+                        <span class="endpoint-summary">Get classes by subject</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get all classes for a specific subject with teacher details.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests API -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Requests API</h2>
+                <p class="section-description">Tutoring request management and status tracking</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/requests</span>
+                        <span class="endpoint-summary">Get all requests</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Query Parameters</div>
+                            <table class="parameters-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>teacher_id</td>
+                                        <td>integer</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Filter by teacher ID</td>
+                                    </tr>
+                                    <tr>
+                                        <td>student_id</td>
+                                        <td>integer</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Filter by student ID</td>
+                                    </tr>
+                                    <tr>
+                                        <td>status</td>
+                                        <td>string</td>
+                                        <td class="param-optional">Optional</td>
+                                        <td>Filter by status: pending, accepted, declined, completed</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">[
+  {
+    "id": 1,
+    "message": "Need help with calculus",
+    "budget": 50.00,
+    "location": "New York",
+    "status": "pending",
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "updated_at": "2025-01-01T00:00:00.000Z",
+    "subject_id": 1,
+    "subject_name": "Mathematics",
+    "student_id": 1,
+    "student_user_id": 1,
+    "student_name": "Student Name",
+    "student_profile_picture": "https://example.com/profile.jpg",
+    "teacher_id": 1,
+    "teacher_user_id": 2,
+    "teacher_name": "Teacher Name",
+    "teacher_profile_picture": "https://example.com/profile.jpg",
+    "class_id": 1,
+    "class_title": "Advanced Mathematics"
+  }
+]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/requests/{id}</span>
+                        <span class="endpoint-summary">Get request by ID</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get specific request details with full student and teacher information.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/requests</span>
+                        <span class="endpoint-summary">Create new request</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "student_id": 1,
+  "teacher_id": 1,
+  "subject_id": 1,
+  "class_id": 1,
+  "message": "Need help with calculus",
+  "budget": 50.00,
+  "location": "New York"
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Required Fields</div>
+                            <p><strong>student_id, teacher_id, subject_id, message</strong> are required. class_id is optional.</p>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Side Effects</div>
+                            <p>Creates a notification for the teacher about the new request.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint-path">/api/requests/{id}/status</span>
+                        <span class="endpoint-summary">Update request status</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "status": "accepted"
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Valid Status Values</div>
+                            <p><strong>pending, accepted, declined, completed</strong></p>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Side Effects</div>
+                            <p>Creates a notification for the student about the status change.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/requests/{id}</span>
+                        <span class="endpoint-summary">Delete request</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Delete a tutoring request permanently.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subscriptions API -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Subscriptions API</h2>
+                <p class="section-description">Subscription plan management for teachers</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/subscriptions/plans</span>
+                        <span class="endpoint-summary">Get all subscription plans</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">[
+  {
+    "id": 1,
+    "name": "Basic",
+    "price_monthly": 9.99,
+    "price_yearly": 99.99,
+    "features": [
+      "View student requests",
+      "Create up to 5 classes"
+    ],
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "updated_at": "2025-01-01T00:00:00.000Z"
+  }
+]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/subscriptions/plans/{id}</span>
+                        <span class="endpoint-summary">Get subscription plan by ID</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get specific subscription plan details with parsed features.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/subscriptions/teacher/{teacherId}</span>
+                        <span class="endpoint-summary">Get teacher's subscription</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Get teacher's current active subscription with plan details.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/subscriptions</span>
+                        <span class="endpoint-summary">Create new subscription</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "teacher_id": 1,
+  "plan_id": 1,
+  "is_yearly": false
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Side Effects</div>
+                            <p>Updates teacher's subscription status and creates a notification.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/subscriptions/{id}/cancel</span>
+                        <span class="endpoint-summary">Cancel subscription</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Cancel a subscription and update teacher's subscription status.</p>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Side Effects</div>
+                            <p>Updates teacher's subscription status to false and creates a notification.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications API -->
+        <div class="section">
+            <div class="section-header collapsible" onclick="toggleSection(this)">
+                <h2>Notifications API</h2>
+                <p class="section-description">User notification management system</p>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-path">/api/notifications/user/{userId}</span>
+                        <span class="endpoint-summary">Get user notifications</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Response Example</div>
+                            <div class="code-block">[
+  {
+    "id": 1,
+    "user_id": 1,
+    "title": "New Request",
+    "message": "You have received a new tutoring request!",
+    "is_read": false,
+    "created_at": "2025-01-01T00:00:00.000Z"
+  }
+]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint-path">/api/notifications/{id}/read</span>
+                        <span class="endpoint-summary">Mark notification as read</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Mark a specific notification as read.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method patch">PATCH</span>
+                        <span class="endpoint-path">/api/notifications/user/{userId}/read-all</span>
+                        <span class="endpoint-summary">Mark all notifications as read</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Mark all notifications as read for a specific user.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/notifications/{id}</span>
+                        <span class="endpoint-summary">Delete notification</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Delete a specific notification permanently.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-path">/api/notifications/user/{userId}/read</span>
+                        <span class="endpoint-summary">Delete all read notifications</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Delete all read notifications for a specific user.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header collapsible" onclick="toggleEndpoint(this)">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-path">/api/notifications</span>
+                        <span class="endpoint-summary">Create notification (Testing)</span>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="endpoint-details">
+                        <div class="detail-section">
+                            <div class="detail-title">Request Body</div>
+                            <div class="code-block">{
+  "user_id": 1,
+  "title": "Test Notification",
+  "message": "This is a test message"
+}</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-title">Description</div>
+                            <p>Create a new notification for testing purposes. All fields are required.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Codes Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Common Error Codes</h2>
+                <p class="section-description">Standard HTTP status codes used throughout the API</p>
+            </div>
+            <div class="endpoints">
+                <div class="endpoint-details" style="display: block; background: white; border-top: none;">
+                    <div class="response-codes">
+                        <div class="response-code success">
+                            <span class="status-code">200</span>
+                            <span>OK - Successful GET, PUT, PATCH requests</span>
+                        </div>
+                        <div class="response-code success">
+                            <span class="status-code">201</span>
+                            <span>Created - Successful POST requests</span>
+                        </div>
+                        <div class="response-code error">
+                            <span class="status-code">400</span>
+                            <span>Bad Request - Validation errors, missing required fields</span>
+                        </div>
+                        <div class="response-code error">
+                            <span class="status-code">401</span>
+                            <span>Unauthorized - Invalid login credentials</span>
+                        </div>
+                        <div class="response-code error">
+                            <span class="status-code">404</span>
+                            <span>Not Found - Resource doesn't exist</span>
+                        </div>
+                        <div class="response-code error">
+                            <span class="status-code">500</span>
+                            <span>Internal Server Error - Database or server errors</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(element) {
+            const section = element.parentElement;
+            const endpoints = section.querySelector('.endpoints');
+            const icon = element.querySelector('.toggle-icon');
+            
+            if (endpoints.style.display === 'none' || endpoints.style.display === '') {
+                endpoints.style.display = 'block';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                endpoints.style.display = 'none';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function toggleEndpoint(element) {
+            const endpoint = element.parentElement;
+            const details = endpoint.querySelector('.endpoint-details');
+            const icon = element.querySelector('.toggle-icon');
+            
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                details.style.display = 'none';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Initialize with sections collapsed
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.endpoints');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            const endpointDetails = document.querySelectorAll('.endpoint-details');
+            endpointDetails.forEach(detail => {
+                detail.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -42,9 +42,14 @@ const Header = () => {
     return location.pathname === path ? 'active' : '';
   };
 
-  const handleLogout = () => {
-    logout();
-    setShowDropdown(false);
+  const handleLogout = async () => {
+    try {
+      
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
@@ -115,16 +120,24 @@ const Header = () => {
                     className="btn btn-link text-dark text-decoration-none"
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
-                    <i className="bi bi-person-circle me-1"></i>
-                    {user.name || 'Profile'}
+                    <img
+                      src={user.profile_picture || 'https://via.placeholder.com/32'}
+                      alt="Profile"
+                      className="rounded-circle me-2"
+                      style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+                    />
+                    {user.name}
                   </button>
                   {showDropdown && (
                     <div className="dropdown-menu show position-absolute end-0 mt-2">
-                      <Link className="dropdown-item" to={`/dashboard/${user.userType}`}>
+                      <Link 
+                        className="dropdown-item" 
+                        to={user.role === 'teacher' ? '/dashboard/teacher' : '/dashboard/student'}
+                      >
                         <i className="bi bi-speedometer2 me-2"></i>
                         Dashboard
                       </Link>
-                      <Link className="dropdown-item" to={`/${user.userType}-profile`}>
+                      <Link className="dropdown-item" to="/profile">
                         <i className="bi bi-person me-2"></i>
                         Profile
                       </Link>
@@ -132,7 +145,7 @@ const Header = () => {
                         <i className="bi bi-gear me-2"></i>
                         Settings
                       </Link>
-                      <button className="dropdown-item" onClick={handleLogout}>
+                      <button className="dropdown-item text-danger" onClick={handleLogout}>
                         <i className="bi bi-box-arrow-right me-2"></i>
                         Logout
                       </button>

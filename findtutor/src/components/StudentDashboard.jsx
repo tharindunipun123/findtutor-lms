@@ -4,15 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const TeacherDashboard = () => {
+const StudentDashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('requests');
 
   useEffect(() => {
-    // Check if user is logged in and is a teacher
-    if (!user || user.role !== 'teacher') {
-      navigate('/login/teacher');
+    // Check if user is logged in and is a student
+    if (!user || user.role !== 'student') {
+      navigate('/login/student');
     }
   }, [user, navigate]);
 
@@ -25,11 +25,11 @@ const TeacherDashboard = () => {
     }
   };
 
-  // Mock data for student requests
-  const studentRequests = [
+  // Mock data for tutor requests
+  const tutorRequests = [
     {
       id: 1,
-      studentName: 'John Doe',
+      teacherName: 'Dr. Sarah Johnson',
       subject: 'Mathematics',
       level: 'Advanced',
       requestDate: '2024-03-15',
@@ -37,7 +37,7 @@ const TeacherDashboard = () => {
     },
     {
       id: 2,
-      studentName: 'Jane Smith',
+      teacherName: 'Prof. Michael Brown',
       subject: 'Physics',
       level: 'Intermediate',
       requestDate: '2024-03-14',
@@ -45,49 +45,49 @@ const TeacherDashboard = () => {
     }
   ];
 
-  // Mock data for classes
-  const classes = [
+  // Mock data for enrolled classes
+  const enrolledClasses = [
     {
       id: 1,
       subject: 'Mathematics',
-      students: 5,
+      teacher: 'Dr. Sarah Johnson',
       schedule: 'Mon, Wed 10:00 AM',
-      status: 'active'
+      progress: 75
     },
     {
       id: 2,
       subject: 'Physics',
-      students: 3,
+      teacher: 'Prof. Michael Brown',
       schedule: 'Tue, Thu 2:00 PM',
-      status: 'active'
+      progress: 60
     }
   ];
 
-  // Mock data for locations
-  const locations = [
+  // Mock data for learning resources
+  const learningResources = [
     {
       id: 1,
-      name: 'Main Teaching Center',
-      address: '123 Education St, City',
-      capacity: 10,
-      status: 'active'
+      title: 'Mathematics Fundamentals',
+      type: 'PDF',
+      subject: 'Mathematics',
+      uploadDate: '2024-03-10'
     },
     {
       id: 2,
-      name: 'Online Sessions',
-      platform: 'Zoom',
-      status: 'active'
+      title: 'Physics Practice Problems',
+      type: 'Video',
+      subject: 'Physics',
+      uploadDate: '2024-03-12'
     }
   ];
 
   // Profile data
   const profileData = {
-    name: user?.name || 'Teacher Name',
-    email: user?.email || 'teacher@example.com',
+    name: user?.name || 'Student Name',
+    email: user?.email || 'student@example.com',
+    grade: '12th Grade',
     subjects: ['Mathematics', 'Physics'],
-    experience: '10 years',
-    rating: 4.8,
-    totalStudents: 50
+    joinDate: '2024-01-01'
   };
 
   return (
@@ -100,8 +100,8 @@ const TeacherDashboard = () => {
             alt="Profile"
             className="profile-image"
           />
-          <h5>{user?.name || 'Teacher Name'}</h5>
-          <p className="text-muted">Teacher</p>
+          <h5>{user?.name || 'Student Name'}</h5>
+          <p className="text-muted">Student</p>
         </div>
 
         <ul className="nav flex-column">
@@ -111,7 +111,25 @@ const TeacherDashboard = () => {
               onClick={() => setActiveTab('requests')}
             >
               <i className="bi bi-envelope me-2"></i>
-              Student Requests
+              Tutor Requests
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === 'classes' ? 'active' : ''}`}
+              onClick={() => setActiveTab('classes')}
+            >
+              <i className="bi bi-book me-2"></i>
+              My Classes
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === 'resources' ? 'active' : ''}`}
+              onClick={() => setActiveTab('resources')}
+            >
+              <i className="bi bi-file-earmark-text me-2"></i>
+              Learning Resources
             </button>
           </li>
           <li className="nav-item">
@@ -121,24 +139,6 @@ const TeacherDashboard = () => {
             >
               <i className="bi bi-person me-2"></i>
               Profile
-            </button>
-          </li>
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === 'classes' ? 'active' : ''}`}
-              onClick={() => setActiveTab('classes')}
-            >
-              <i className="bi bi-book me-2"></i>
-              Classes
-            </button>
-          </li>
-          <li className="nav-item">
-            <button
-              className={`nav-link ${activeTab === 'location' ? 'active' : ''}`}
-              onClick={() => setActiveTab('location')}
-            >
-              <i className="bi bi-geo-alt me-2"></i>
-              Location
             </button>
           </li>
           <li className="nav-item mt-3">
@@ -157,10 +157,10 @@ const TeacherDashboard = () => {
       <main className="main-content">
         <div className="content-header">
           <h1>
-            {activeTab === 'requests' && 'Student Requests'}
+            {activeTab === 'requests' && 'Tutor Requests'}
+            {activeTab === 'classes' && 'My Classes'}
+            {activeTab === 'resources' && 'Learning Resources'}
             {activeTab === 'profile' && 'Profile Management'}
-            {activeTab === 'classes' && 'Class Management'}
-            {activeTab === 'location' && 'Location Management'}
           </h1>
         </div>
 
@@ -168,12 +168,12 @@ const TeacherDashboard = () => {
           {activeTab === 'requests' && (
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">Student Requests</h5>
+                <h5 className="card-title">Tutor Requests</h5>
                 <div className="table-responsive">
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>Student</th>
+                        <th>Teacher</th>
                         <th>Subject</th>
                         <th>Level</th>
                         <th>Date</th>
@@ -182,9 +182,9 @@ const TeacherDashboard = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {studentRequests.map(request => (
+                      {tutorRequests.map(request => (
                         <tr key={request.id}>
-                          <td>{request.studentName}</td>
+                          <td>{request.teacherName}</td>
                           <td>{request.subject}</td>
                           <td>{request.level}</td>
                           <td>{request.requestDate}</td>
@@ -194,8 +194,96 @@ const TeacherDashboard = () => {
                             </span>
                           </td>
                           <td>
-                            <button className="btn btn-sm btn-primary me-2">Accept</button>
-                            <button className="btn btn-sm btn-danger">Reject</button>
+                            <button className="btn btn-sm btn-primary me-2">View Details</button>
+                            <button className="btn btn-sm btn-danger">Cancel</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <button className="btn btn-primary mt-3">Request New Tutor</button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'classes' && (
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Enrolled Classes</h5>
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Schedule</th>
+                        <th>Progress</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {enrolledClasses.map(cls => (
+                        <tr key={cls.id}>
+                          <td>{cls.subject}</td>
+                          <td>{cls.teacher}</td>
+                          <td>{cls.schedule}</td>
+                          <td>
+                            <div className="progress">
+                              <div 
+                                className="progress-bar" 
+                                role="progressbar" 
+                                style={{ width: `${cls.progress}%` }}
+                                aria-valuenow={cls.progress} 
+                                aria-valuemin="0" 
+                                aria-valuemax="100"
+                              >
+                                {cls.progress}%
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <button className="btn btn-sm btn-primary me-2">View Details</button>
+                            <button className="btn btn-sm btn-danger">Leave Class</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'resources' && (
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Learning Resources</h5>
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Subject</th>
+                        <th>Upload Date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {learningResources.map(resource => (
+                        <tr key={resource.id}>
+                          <td>{resource.title}</td>
+                          <td>
+                            <span className={`badge bg-${resource.type === 'PDF' ? 'danger' : 'primary'}`}>
+                              {resource.type}
+                            </span>
+                          </td>
+                          <td>{resource.subject}</td>
+                          <td>{resource.uploadDate}</td>
+                          <td>
+                            <button className="btn btn-sm btn-primary me-2">Download</button>
+                            <button className="btn btn-sm btn-info">View</button>
                           </td>
                         </tr>
                       ))}
@@ -221,102 +309,22 @@ const TeacherDashboard = () => {
                       <input type="email" className="form-control" value={profileData.email} readOnly />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Subjects</label>
-                      <input type="text" className="form-control" value={profileData.subjects.join(', ')} readOnly />
+                      <label className="form-label">Grade</label>
+                      <input type="text" className="form-control" value={profileData.grade} readOnly />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="mb-3">
-                      <label className="form-label">Experience</label>
-                      <input type="text" className="form-control" value={profileData.experience} readOnly />
+                      <label className="form-label">Subjects</label>
+                      <input type="text" className="form-control" value={profileData.subjects.join(', ')} readOnly />
                     </div>
                     <div className="mb-3">
-                      <label className="form-label">Rating</label>
-                      <input type="text" className="form-control" value={profileData.rating} readOnly />
-                    </div>
-                    <div className="mb-3">
-                      <label className="form-label">Total Students</label>
-                      <input type="text" className="form-control" value={profileData.totalStudents} readOnly />
+                      <label className="form-label">Join Date</label>
+                      <input type="text" className="form-control" value={profileData.joinDate} readOnly />
                     </div>
                   </div>
                 </div>
                 <button className="btn btn-primary">Edit Profile</button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'classes' && (
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Class Management</h5>
-                <div className="table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Subject</th>
-                        <th>Students</th>
-                        <th>Schedule</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {classes.map(cls => (
-                        <tr key={cls.id}>
-                          <td>{cls.subject}</td>
-                          <td>{cls.students}</td>
-                          <td>{cls.schedule}</td>
-                          <td>
-                            <span className="badge bg-success">{cls.status}</span>
-                          </td>
-                          <td>
-                            <button className="btn btn-sm btn-primary me-2">Edit</button>
-                            <button className="btn btn-sm btn-danger">Delete</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <button className="btn btn-primary mt-3">Add New Class</button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'location' && (
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Location Management</h5>
-                <div className="table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Address/Platform</th>
-                        <th>Capacity</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {locations.map(location => (
-                        <tr key={location.id}>
-                          <td>{location.name}</td>
-                          <td>{location.address || location.platform}</td>
-                          <td>{location.capacity || 'N/A'}</td>
-                          <td>
-                            <span className="badge bg-success">{location.status}</span>
-                          </td>
-                          <td>
-                            <button className="btn btn-sm btn-primary me-2">Edit</button>
-                            <button className="btn btn-sm btn-danger">Delete</button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <button className="btn btn-primary mt-3">Add New Location</button>
               </div>
             </div>
           )}
@@ -406,6 +414,10 @@ const TeacherDashboard = () => {
           padding: 5px 10px;
         }
 
+        .progress {
+          height: 20px;
+        }
+
         @media (max-width: 768px) {
           .sidebar {
             width: 100%;
@@ -426,4 +438,4 @@ const TeacherDashboard = () => {
   );
 };
 
-export default TeacherDashboard; 
+export default StudentDashboard; 

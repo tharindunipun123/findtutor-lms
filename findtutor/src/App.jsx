@@ -12,17 +12,23 @@ import StudentPosts from './components/studentPosts'
 import StudentAuth from './components/auth/StudentAuth'
 import TeacherAuth from './components/auth/TeacherAuth'
 import TeacherDashboard from './components/dashboard/TeacherDashboard'
+import StudentDashboard from './components/StudentDashboard'
 import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 // Protected Route component
-const ProtectedRoute = ({ children, userType }) => {
-  const { user } = useAuth();
+const ProtectedRoute = ({ children, requiredRole }) => {
+  const { user, loading } = useAuth();
   
-  if (!user) {
-    return <Navigate to="/" />;
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  if (userType && user.userType !== userType) {
+  if (!user) {
+    return <Navigate to={`/login/${requiredRole}`} />;
+  }
+
+  if (user.role !== requiredRole) {
     return <Navigate to="/" />;
   }
 
@@ -30,43 +36,53 @@ const ProtectedRoute = ({ children, userType }) => {
 };
 
 const AppContent = () => {
+  const { user } = useAuth();
+
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Header />
-      <main className="flex-grow-1">
-        <Routes>
-          <Route path="/" element={<EduLink />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/find-teachers" element={<FindTeachers />} />
-          <Route path="/student-posts" element={<StudentPosts />} />
-          <Route path="/login/student" element={<StudentAuth isLogin={true} />} />
-          <Route path="/login/teacher" element={<TeacherAuth isLogin={true} />} />
-          <Route path="/register/student" element={<StudentAuth isLogin={false} />} />
-          <Route path="/register/teacher" element={<TeacherAuth isLogin={false} />} />
-          <Route
-            path="/dashboard/teacher"
-            element={
-              <ProtectedRoute userType="teacher">
-                <TeacherDashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <Router>
+      <div className="d-flex flex-column min-vh-100">
+        <Header />
+        <main className="flex-grow-1">
+          <Routes>
+            <Route path="/" element={<EduLink />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/find-teachers" element={<FindTeachers />} />
+            <Route path="/student-posts" element={<StudentPosts />} />
+            <Route path="/login/student" element={<StudentAuth />} />
+            <Route path="/login/teacher" element={<TeacherAuth />} />
+            <Route path="/register/student" element={<StudentAuth />} />
+            <Route path="/register/teacher" element={<TeacherAuth />} />
+            <Route
+              path="/dashboard/teacher"
+              element={
+                <ProtectedRoute requiredRole="teacher">
+                  <TeacherDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/student"
+              element={
+                <ProtectedRoute requiredRole="student">
+                  <StudentDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 };
 
 const App = () => {
   return (
-    <Router>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </Router>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
 
