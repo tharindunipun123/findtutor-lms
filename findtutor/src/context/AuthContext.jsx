@@ -16,22 +16,25 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (email, password, role) => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/users/login', {
-        email,
-        password,
-        role
-      });
-
-      const userData = response.data;
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-      return userData;
-    } catch (error) {
-      throw error.response?.data || { message: 'Login failed' };
+  const login = async (userData) => {
+  try {
+    // Store user data directly (no API call needed since TeacherAuth handles that)
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+    
+    // Store additional IDs for backward compatibility
+    if (userData.role === 'student') {
+      localStorage.setItem('studentId', userData.studentId?.toString());
+    } else if (userData.role === 'teacher') {
+      localStorage.setItem('teacherId', userData.teacherId?.toString());
     }
-  };
+    
+    return userData;
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
+};
 
   const register = async (userData) => {
     try {

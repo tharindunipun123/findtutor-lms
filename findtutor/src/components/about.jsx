@@ -213,7 +213,7 @@ const About = () => {
         </div>
       </section>
 
-      <Footer />
+      
 
       <style jsx>{`
         .about-hero {

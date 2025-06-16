@@ -120,12 +120,12 @@ const Header = () => {
                     className="btn btn-link text-dark text-decoration-none"
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
-                    <img
+                    {/* <img
                       src={user.profile_picture || 'https://via.placeholder.com/32'}
                       alt="Profile"
                       className="rounded-circle me-2"
                       style={{ width: '32px', height: '32px', objectFit: 'cover' }}
-                    />
+                    /> */}
                     {user.name}
                   </button>
                   {showDropdown && (
@@ -137,14 +137,14 @@ const Header = () => {
                         <i className="bi bi-speedometer2 me-2"></i>
                         Dashboard
                       </Link>
-                      <Link className="dropdown-item" to="/profile">
+                      {/* <Link className="dropdown-item" to="/profile">
                         <i className="bi bi-person me-2"></i>
                         Profile
                       </Link>
                       <Link className="dropdown-item" to="/settings">
                         <i className="bi bi-gear me-2"></i>
                         Settings
-                      </Link>
+                      </Link> */}
                       <button className="dropdown-item text-danger" onClick={handleLogout}>
                         <i className="bi bi-box-arrow-right me-2"></i>
                         Logout

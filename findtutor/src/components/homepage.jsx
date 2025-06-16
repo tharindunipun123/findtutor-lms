@@ -154,10 +154,10 @@ const EduLink = () => {
                   <i className="bi bi-search me-2"></i>
                   Find a Teacher
                 </button>
-                <button className="btn btn-outline-light btn-lg d-flex align-items-center justify-content-center">
+                {/* <button className="btn btn-outline-light btn-lg d-flex align-items-center justify-content-center">
                   <i className="bi bi-book me-2"></i>
                   Post a Request
-                </button>
+                </button> */}
               </div>
             </div>
             

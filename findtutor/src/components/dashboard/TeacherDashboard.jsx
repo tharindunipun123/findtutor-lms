@@ -12,7 +12,7 @@ const TeacherDashboard = () => {
   };
 
   return (
-    <div className="container-fluid py-4">
+    <div className="container-fluid py-4 mt-5">
       <div className="row">
         {/* Sidebar */}
         <div className="col-md-3 col-lg-2">

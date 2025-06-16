@@ -114,7 +114,7 @@ const StudentDashboard = () => {
               Tutor Requests
             </button>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <button
               className={`nav-link ${activeTab === 'classes' ? 'active' : ''}`}
               onClick={() => setActiveTab('classes')}
@@ -122,8 +122,8 @@ const StudentDashboard = () => {
               <i className="bi bi-book me-2"></i>
               My Classes
             </button>
-          </li>
-          <li className="nav-item">
+          </li> */}
+          {/* <li className="nav-item">
             <button
               className={`nav-link ${activeTab === 'resources' ? 'active' : ''}`}
               onClick={() => setActiveTab('resources')}
@@ -131,7 +131,7 @@ const StudentDashboard = () => {
               <i className="bi bi-file-earmark-text me-2"></i>
               Learning Resources
             </button>
-          </li>
+          </li> */}
           <li className="nav-item">
             <button
               className={`nav-link ${activeTab === 'profile' ? 'active' : ''}`}
