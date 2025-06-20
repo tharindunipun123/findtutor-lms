@@ -235,7 +235,7 @@ const StudentPosts = () => {
                   onClick={() => setActiveTab('all')}
                 >
                   <i className="bi bi-grid me-2"></i>
-                  {currentUser?.role === 'student' ? 'All Posts' : 'Student Requests'} ({allPosts.length})
+                  {currentUser?.role === 'student' ? 'All Posts' : ' All Posts'} ({allPosts.length})
                 </button>
               </li>
               {currentUser?.role === 'student' && (

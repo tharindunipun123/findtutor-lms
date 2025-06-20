@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Header from './header';
@@ -10,7 +11,7 @@ const EduLink = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [activePage, setActivePage] = useState('home');
   const [isSticky, setIsSticky] = useState(false);
-
+  const navigate = useNavigate();
   // Handle scroll for sticky header
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +37,10 @@ const EduLink = () => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
+  
+ const navigateFindteachers = ()=>{
+   navigate("/find-teachers");
+ }
   // Navigation links
   const navLinks = [
     { id: 'home', name: 'Home', href: '#' },
@@ -150,7 +154,7 @@ const EduLink = () => {
                 EduLink brings students and teachers together for personalized learning experiences that inspire academic success.
               </p>
               <div className="d-flex flex-column flex-sm-row gap-3 pt-3">
-                <button className="btn btn-light btn-lg text-primary d-flex align-items-center justify-content-center">
+                <button className="btn btn-light btn-lg text-primary d-flex align-items-center justify-content-center" onClick={()=>{navigate("/find-teachers");}}>
                   <i className="bi bi-search me-2"></i>
                   Find a Teacher
                 </button>

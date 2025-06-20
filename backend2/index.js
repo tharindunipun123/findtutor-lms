@@ -126,7 +126,67 @@ db.execute(`
   else console.log('TeachersPosts table ready');
 });
 
+db.execute(`
+  CREATE TABLE IF NOT EXISTS studentrequests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    postId INT NOT NULL,
+    studentId INT NOT NULL,
+    teacherId INT NOT NULL,
+    rating INT CHECK (rating >= 1 AND rating <= 5),
+    reviewText TEXT,
+    payed BOOLEAN DEFAULT FALSE,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (postId) REFERENCES TeachersPosts(id) ON DELETE CASCADE,
+    FOREIGN KEY (studentId) REFERENCES StudentProfile(id) ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES Teachers(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_student_post (studentId, postId)
+  )
+`, (err) => {
+  if (err) console.error('Error creating Student Request table:', err);
+  else console.log('Student Request table ready');
+});
 
+// Create TeacherPurchases table
+db.execute(`
+  CREATE TABLE IF NOT EXISTS TeacherPurchases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    studentPostId INT NOT NULL,
+    teacherId INT NOT NULL,
+    studentId INT NOT NULL,
+    paymentAmount DECIMAL(10,2) NOT NULL,
+    paymentStatus ENUM('paid', 'pending', 'failed') DEFAULT 'pending',
+    phoneNumberAccess BOOLEAN DEFAULT FALSE,
+    purchasedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (studentPostId) REFERENCES StudentPost(id) ON DELETE CASCADE,
+    FOREIGN KEY (teacherId) REFERENCES Teachers(id) ON DELETE CASCADE,
+    FOREIGN KEY (studentId) REFERENCES StudentProfile(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_teacher_purchase (teacherId, studentPostId)
+  )
+`, (err) => {
+  if (err) console.error('Error creating TeacherPurchases table:', err);
+  else console.log('TeacherPurchases table ready');
+});
+
+db.execute(`
+  CREATE TABLE IF NOT EXISTS PostReviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    postId INT NOT NULL,
+    studentId INT NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    reviewText TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (postId) REFERENCES TeachersPosts(id) ON DELETE CASCADE,
+    FOREIGN KEY (studentId) REFERENCES StudentProfile(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_student_post_review (studentId, postId)
+  )
+`, (err) => {
+  if (err) console.error('Error creating PostReviews table:', err);
+  else console.log('PostReviews table ready');
+});
+
+
+// STUDENT ROUTES
 
 // Register student
 app.post('/api/students/register', upload.single('profilePhoto'), (req, res) => {
@@ -253,7 +313,7 @@ app.delete('/api/students/:id', (req, res) => {
   });
 });
 
-// POST ROUTES
+// STUDENT POST ROUTES
 
 // Create post
 app.post('/api/posts', (req, res) => {
@@ -325,7 +385,7 @@ app.get('/api/posts', (req, res) => {
   });
 });
 
-// Get posts by student ID
+
 app.get('/api/students/:studentId/posts', (req, res) => {
   const { studentId } = req.params;
   const query = 'SELECT * FROM StudentPost WHERE studentId = ? ORDER BY createdAt DESC';
@@ -338,7 +398,7 @@ app.get('/api/students/:studentId/posts', (req, res) => {
   });
 });
 
-// Get post by ID
+
 app.get('/api/posts/:id', (req, res) => {
   const { id } = req.params;
   const query = `
@@ -400,7 +460,7 @@ app.put('/api/posts/:id', (req, res) => {
   });
 });
 
-// Delete post
+
 app.delete('/api/posts/:id', (req, res) => {
   const { id } = req.params;
   const query = 'DELETE FROM StudentPost WHERE id = ?';
@@ -418,11 +478,16 @@ app.delete('/api/posts/:id', (req, res) => {
   });
 });
 
-// Import and use teacher routes
-const teacherRoutes = require('./teacher');
-app.use('/api', teacherRoutes);
 
-// Health check
+const teacherPostsRoutes = require('./teacher');
+app.use('/api', teacherPostsRoutes);
+
+const teacherPosts = require('./teachersposts');
+app.use('/post', teacherPosts);
+
+
+
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
